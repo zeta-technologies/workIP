@@ -18,7 +18,7 @@ from colour import Color
 import argparse
 
 print 'Start'
-duration = 30
+duration = 10
 sampleRate = 200
 nbLines = 5
 bufferT = []
