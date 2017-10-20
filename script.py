@@ -22,11 +22,20 @@ duration = 10
 sampleRate = 200
 nbLines = 5
 bufferT = []
-process = Popen(['/usr/local/bin/node', 'openBCIDataStream.js'], stdout=PIPE)
-queue = Queue()
-thread = Thread(target=enqueue_output, args=(process.stdout, queue))
-thread.daemon = True
-thread.start()
+if platform == 'darwin' and sessionRS1 == 0: # mac
+    process = Popen(['/usr/local/bin/node', 'openBCIDataStream.js'], stdout=PIPE) # for MAC
+    '''launch node process'''
+    queue = Queue()
+    thread = Thread(target=enqueue_output, args=(process.stdout, queue))
+    thread.daemon = True
+    thread.start()
+elif platform == 'linux' or platform == 'linux2' and sessionRS1 == 0: #linux
+    process = Popen(['sudo', '/usr/bin/node', 'openBCIDataStream.js'], stdout=PIPE, preexec_fn=os.setsid) # for LINUX
+    '''launch node process'''
+    queue = Queue()
+    thread = Thread(target=enqueue_output, args=(process.stdout, queue))
+    thread.daemon = True
+    thread.start()
 now = time.time()
 
 
