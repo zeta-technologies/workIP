@@ -17,18 +17,22 @@ import os, binascii
 from colour import Color
 import argparse
 
-now = time.time()
+print 'Start'
+duration = 30
+sampleRate = 200
+nbLines = 5
 bufferT = []
 process = Popen(['/usr/local/bin/node', 'openBCIDataStream.js'], stdout=PIPE)
 queue = Queue()
 thread = Thread(target=enqueue_output, args=(process.stdout, queue))
 thread.daemon = True
 thread.start()
-print 'Start'
+now = time.time()
 
-while time.time() - now < 5:
+
+while time.time() - now <= duration:
     try:
-        while len(bufferT) < 5*900:
+        while len(bufferT) < duration*nbLines*sampleRate:
 
             bufferT.append(queue.get_nowait())
     except Empty:
